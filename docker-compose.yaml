@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: gustavolucena
+    ports:
+      - 5432:5432
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"  # API S3
+      - "9090:9090"  # Console Web
+    environment:
+      MINIO_ROOT_USER: admin  # Usuário admin
+      MINIO_ROOT_PASSWORD: password  # Senha admin
+    volumes:
+      - minio_data:/data  # Persistência dos dados
+    command: server /data --console-address ":9090"
+    restart: always
+
+volumes:
+  minio_data:
