@@ -30,6 +30,7 @@ public class AWSConfig {
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(key, secret)))
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, awsRegion))
+                .withPathStyleAccessEnabled(true)
                 .build();
     }
 }
