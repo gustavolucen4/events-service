@@ -5,10 +5,12 @@ import br.com.gustavo.domain.event.EventRequestDTO;
 import br.com.gustavo.domain.event.EventResponseDTO;
 import br.com.gustavo.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,4 +42,18 @@ public class EventController {
         List<EventResponseDTO> pageEvents = eventService.getUpcomingEvents(page, size);
         return  ResponseEntity.ok(pageEvents);
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EventResponseDTO>> getFilteredEvents(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size,
+                                                                  @RequestParam(value = "title", required = false) String title,
+                                                                  @RequestParam(value = "city", required = false) String city,
+                                                                  @RequestParam(value = "state", required = false) String state,
+                                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
+
+        List<EventResponseDTO> pageEvents = eventService.getFilteredEvents(page, size, title, city, state, startDate, endDate);
+        return  ResponseEntity.ok(pageEvents);
+    }
+
 }

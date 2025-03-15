@@ -13,14 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class EventService {
     private String bucketName;
 
     private final EventRepository repository;
-
+    private final AddressService addressService;
     private final AmazonS3 amazonS3;
 
     public Event createEvent(EventRequestDTO data){
@@ -48,6 +46,10 @@ public class EventService {
         newEvent.setRemote(data.remote());
 
         newEvent = repository.save(newEvent);
+
+        if (!data.remote()){
+            addressService.createAddress(data, newEvent);
+        }
 
         return newEvent;
     }
@@ -77,8 +79,32 @@ public class EventService {
     public List<EventResponseDTO> getUpcomingEvents(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Event> eventPage = repository.findUpcomingEvents(new Date(), pageable);
-        return eventPage.stream().map(event -> new EventResponseDTO(event.getId(), event.getTitle(), event.getDescription(), event.getDate(), "", "", event.getRemote(),  event.getEventUrl(), event.getImgUrl())).toList();
+        return eventPage.stream().map(event -> new EventResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getRemote(),
+                event.getEventUrl(),
+                event.getImgUrl())
+        ).toList();
     }
 
-
+    public List<EventResponseDTO> getFilteredEvents(int page, int size, String title, String city, String state, Date startDate, Date endDate) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Event> eventPage = repository.findFilteredEvents(title, city, state, startDate, endDate, pageable);
+        return eventPage.stream().map(event -> new EventResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getRemote(),
+                event.getEventUrl(),
+                event.getImgUrl())
+        ).toList();
+    }
 }
