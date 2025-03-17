@@ -1,6 +1,7 @@
 package br.com.gustavo.controller;
 
 import br.com.gustavo.domain.event.Event;
+import br.com.gustavo.domain.event.EventDetailsResponseDTO;
 import br.com.gustavo.domain.event.EventRequestDTO;
 import br.com.gustavo.domain.event.EventResponseDTO;
 import br.com.gustavo.service.EventService;
@@ -10,8 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -43,14 +45,21 @@ public class EventController {
         return  ResponseEntity.ok(pageEvents);
     }
 
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDetailsResponseDTO> getEventById(@RequestParam("eventId") UUID eventId){
+
+        EventDetailsResponseDTO pageEvents = eventService.getEventById(eventId);
+        return  ResponseEntity.ok(pageEvents);
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<List<EventResponseDTO>> getFilteredEvents(@RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size,
                                                                   @RequestParam(value = "title", required = false) String title,
                                                                   @RequestParam(value = "city", required = false) String city,
                                                                   @RequestParam(value = "state", required = false) String state,
-                                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
+                                                                  @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime startDate,
+                                                                  @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime endDate){
 
         List<EventResponseDTO> pageEvents = eventService.getFilteredEvents(page, size, title, city, state, startDate, endDate);
         return  ResponseEntity.ok(pageEvents);

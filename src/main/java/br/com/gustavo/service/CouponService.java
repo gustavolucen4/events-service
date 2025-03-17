@@ -8,7 +8,9 @@ import br.com.gustavo.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.event.ListDataEvent;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,5 +31,9 @@ public class CouponService {
         coupon.setEvent(event);
 
         return repository.save(coupon);
+    }
+
+    public List<Coupon> findCouponByEventId(UUID eventId){
+        return repository.findCouponsByEvent_Id(eventId);
     }
 }
