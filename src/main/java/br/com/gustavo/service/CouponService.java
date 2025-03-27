@@ -8,8 +8,8 @@ import br.com.gustavo.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.event.ListDataEvent;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +27,19 @@ public class CouponService {
         Coupon coupon = new Coupon();
         coupon.setCode(request.code());
         coupon.setDiscount(request.discount());
-        coupon.setValid(new Date(request.valid()));
+        coupon.setValid((Instant.ofEpochMilli(Instant.now().toEpochMilli())
+                .atZone(ZoneId.systemDefault()) // Usa o fuso horário do sistema
+                .toLocalDateTime()));
+
         coupon.setEvent(event);
 
         return repository.save(coupon);
     }
 
     public List<Coupon> findCouponByEventId(UUID eventId){
-        return repository.findCouponsByEvent_Id(eventId);
+        return repository.findCouponsByEvent_IdAndValidAfter(eventId,
+                (Instant.ofEpochMilli(Instant.now().toEpochMilli())
+                .atZone(ZoneId.systemDefault()) // Usa o fuso horário do sistema
+                .toLocalDateTime()));
     }
 }

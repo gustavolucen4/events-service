@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -88,7 +87,11 @@ public class EventService {
 
     public List<EventResponseDTO> getUpcomingEvents(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Event> eventPage = repository.findUpcomingEvents(new Date(), pageable);
+        Page<Event> eventPage = repository.findUpcomingEvents(
+                Instant.ofEpochMilli(Instant.now().toEpochMilli())
+                .atZone(ZoneId.systemDefault()) // Usa o fuso horário do sistema
+                .toLocalDateTime(), pageable);
+
         return eventPage.stream().map(event -> new EventResponseDTO(
                 event.getId(),
                 event.getTitle(),
