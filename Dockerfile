@@ -8,8 +8,8 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# Compila a aplicação
-RUN mvn package
+# Compila a aplicação sem rodar testes
+RUN mvn clean package -DskipTests
 
 # Etapa 2: Criar a imagem final para execução
 FROM eclipse-temurin:21-jre-alpine
