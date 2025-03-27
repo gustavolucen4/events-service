@@ -3,7 +3,7 @@ pipeline{
 
     stages {
         stage('Build Docker image'){
-           steps{
+           steps {
             sh 'echo Executando o comando docker build'
             script {
                 dockerapp = docker.build("gustavolucen4/events:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
