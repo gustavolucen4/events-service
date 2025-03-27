@@ -6,7 +6,7 @@ pipeline{
            steps {
             sh 'echo Executando o comando docker build'
             script {
-                dockerapp = docker.build("gustavolucen4/events:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
+                dockerapp = docker.build("gustavolucen4/events:${env.BUILD_ID}", '-f ./Dockerfile ./')
             }
            }
         }
