@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: events-service
+  template:
+    metadata:
+      labels:
+        app: events-service
+    spec:
+      containers:
+        - name: events-service
+          image: gustavolucen4/events{{tag}}
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: events-service
+spec:
+  selector:
+    app: events-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
