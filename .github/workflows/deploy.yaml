@@ -30,7 +30,7 @@ jobs:
       - name: Construção da imagem Docker
         uses: docker/build-push-action@v3.2.0
         with:
-          context: ./src
+          context: ./
           file: ./Dockerfile
           push: true
           tags: |
