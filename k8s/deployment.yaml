@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: events-service
-          image: gustavolucen4/events:{{tag}}
+          image: gustavolucen4/events:latest
           ports:
             - containerPort: 8080
 ---
