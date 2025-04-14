@@ -43,8 +43,8 @@ jobs:
 #      - name: Push da imagem Docker
 #        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/java-app:latest
 
-      - name: Deploy no Kubernetes
-        run: kubectl apply -f k8s/deployment.yaml
+#      - name: Deploy no Kubernetes
+#        run: kubectl apply -f k8s/deployment.yaml
 
   CD:
     runs-on: self-hosted
