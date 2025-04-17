@@ -58,7 +58,6 @@ jobs:
 #        with:
 #          method: kubeconfig
 #          kubeconfig: ${{secrets.K8S_CONFIG}}
-
       - name: Definindo o context
         uses: ./_actions/Azure/k8s-set-context
         with:
